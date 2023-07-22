@@ -6,8 +6,9 @@ import {
     signInWithGoogleRedirect,
     createUserDocumentFromAuth} from '../../utils/firebase/firebase.utils';
 import SignUpForm from "../../components/sign-up-form/sign-up-form.component";
+import SignInForm from "../../components/sign-in-form/sign-in-form.component";
 
-const SignIn = () => {
+const Authentication = () => {
     // useEffect(()=>{
     //     const asyncFn = async() =>{
     //         const response =  await getRedirectResult(auth);
@@ -17,19 +18,14 @@ const SignIn = () => {
     //     }
     //     asyncFn();
     // },[]); 
-    //as we are signing-in with google redirect, once we come back, the app will 
-    //again remount and we want to get the user info at that time so we are using useEffect here
+    //when we are signing-in with google redirect, once we come back, the app will 
+    //again remount and we want to get the user info at that time so we are using useEffect here, but for now we are using signinwith popup
 
-    const logGoogleUser = async() => {
-        const { user } = await signInWithGooglePopup();
-        const userDocRef = await createUserDocumentFromAuth(user);
-    };
+    
     return(
         <div>
             <h1>Sign In Page</h1>
-            <button onClick={logGoogleUser}>
-                Sign in with Google Popup
-            </button>
+            <SignInForm/>
             <SignUpForm />
             {/* <button onClick={signInWithGoogleRedirect}>
                 Sign in with Google Redirect
@@ -38,4 +34,4 @@ const SignIn = () => {
     )
 };
 
-export default SignIn;
+export default Authentication;
