@@ -37,9 +37,9 @@ googleProvider.setCustomParameters({
 export const auth = getAuth(); //singelton instance
 export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
 export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
-
 export const db = getFirestore(); //singelton instance
-export const createUserDocumentFromAuth = async (userAuth) => {
+
+export const createUserDocumentFromAuth = async (userAuth, additionalInformation = {}) => {
   if(!userAuth) return;
   
   const userDocRef = doc(db, 'users', userAuth.uid); //gives the reference of document using uid/unique identifier for doc
@@ -52,7 +52,8 @@ export const createUserDocumentFromAuth = async (userAuth) => {
       await setDoc(userDocRef, {
         displayName,
         email,
-        createdAt
+        createdAt,
+        ...additionalInformation,
       });
     }catch(error){
       console.log('error creating the user', error.message);
