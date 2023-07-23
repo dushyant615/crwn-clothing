@@ -24,13 +24,20 @@ const SignInForm = () => {
     
     const handleSubmit = async(event)=>{
         event.preventDefault();
-    
         try{
             const response = await signInAuthUserWithEmailAndPassword(email, password);
-            console.log(response);
             resetFormFields();
         }catch(err){
-            
+            switch(err.code){
+                case 'auth/wrong-password':
+                    alert('Incorrect password for email');
+                    break;
+                case 'auth/user-not-found':
+                    alert('No user associated with this email');
+                    break;
+                default:
+                    console.log(err);
+            } 
         }
     };
 
@@ -48,9 +55,10 @@ const SignInForm = () => {
                 <FormInput label="Password" type="password" required onChange={handleChange} name="password" value={password}/>
                 <div className="buttons-container">
                     <Button type="submit">Sign In</Button>
-                    <Button buttonType="google" onClick={signInWithGoogle}>
+                    <Button type="button" buttonType="google" onClick={signInWithGoogle}>
                         Google Sign in
                     </Button>
+                    {/* by default button is of type submit, thats why we have specify type as button */}    
                 </div>
             </form>
         </div>
@@ -58,3 +66,19 @@ const SignInForm = () => {
 }
 
 export default SignInForm;
+
+//   <button onClick={signInWithGoogleRedirect}>
+//                     Sign in with Google Redirect
+//                     </button> 
+                    
+// useEffect(()=>{
+    //     const asyncFn = async() =>{
+    //         const response =  await getRedirectResult(auth);
+    //         if(response){
+    //             const userDocRef = await createUserDocumentFromAuth(response.user);
+    //         };
+    //     }
+    //     asyncFn();
+    // },[]); 
+    //when we are signing-in with google redirect, once we come back, the app will 
+    //again remount and we want to get the user info at that time so we are using useEffect here, but for now we are using signinwith popup
