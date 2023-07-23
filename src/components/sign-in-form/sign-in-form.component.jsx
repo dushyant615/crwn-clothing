@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { UserContext } from "../../contexts/user.context";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 import './sign-in-form.styles.scss';
@@ -12,20 +13,19 @@ const defaultformFields = {
 const SignInForm = () => {
     const [formFields, setFormFields] = useState(defaultformFields);
     const { email, password } = formFields;
+    const { setCurrentUser } = useContext(UserContext);
 
-    const handleChange = (event) => {
-        const {name, value} = event.target;
-        setFormFields({...formFields, [name]: value});
+    const signInWithGoogle = async() => {
+        const { user } = await signInWithGooglePopup();
+        setCurrentUser(user);
+        await createUserDocumentFromAuth(user);
     };
 
-    const resetFormFields = () =>{
-        setFormFields(defaultformFields);
-    };
-    
     const handleSubmit = async(event)=>{
         event.preventDefault();
         try{
-            const response = await signInAuthUserWithEmailAndPassword(email, password);
+            const {user} = await signInAuthUserWithEmailAndPassword(email, password);
+            setCurrentUser(user);
             resetFormFields();
         }catch(err){
             switch(err.code){
@@ -41,11 +41,15 @@ const SignInForm = () => {
         }
     };
 
-    const signInWithGoogle = async() => {
-        const { user } = await signInWithGooglePopup();
-        await createUserDocumentFromAuth(user);
+    const handleChange = (event) => {
+        const {name, value} = event.target;
+        setFormFields({...formFields, [name]: value});
     };
 
+    const resetFormFields = () =>{
+        setFormFields(defaultformFields);
+    };
+    
     return(
         <div className="sign-in-container">
             <h2>Already have an account?</h2>
