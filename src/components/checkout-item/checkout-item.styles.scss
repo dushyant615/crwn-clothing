@@ -25,7 +25,8 @@
   .quantity {
     display: flex;
 
-    .arrow {
+    .decrement,
+    .increment {
       cursor: pointer;
     }
 
