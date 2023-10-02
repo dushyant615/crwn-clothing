@@ -14,7 +14,7 @@ const App = ()=> {
       <Route path="/" element={<Navigation/>}>
         {/* index below allows to set it as a base component of <Navigation/>, when only slash'/' is there*/}
         <Route index={true} element={<Home/>}/> 
-        <Route path="shop" element={<Shop/>}/> 
+        <Route path="shop/*" element={<Shop/>}/>  
         <Route path="auth" element={<Authentication/>}/>
         <Route path="checkout" element={<Checkout/>}/>
       </Route>      
@@ -23,3 +23,4 @@ const App = ()=> {
 }
 
 export default App;
+//*wild card for nested routes
