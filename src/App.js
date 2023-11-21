@@ -17,7 +17,6 @@ const App = ()=> {
             // centralizing user doc creation
             createUserDocumentFromAuth(user);                
         }
-        console.log('useeffect');
         dispatch(setCurrentUser(user));
     });
     return unsubscribe; //cleanup function that will unsubscribe the observer to prevent memory leak.
