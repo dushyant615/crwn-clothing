@@ -9,3 +9,16 @@ const composedEnhancers = compose(applyMiddleware(...middleWares));
 
 // we need root reducer in order to generate the store.
 export const store = createStore(rootReducer, undefined, composedEnhancers);
+
+// custom redux logger
+// const loggerMiddleware = (store) => (next) => (action) => {
+//     if(!action.type){
+//         return next(action);
+//     }
+//     console.log('type: ', action.type);
+//     console.log('payload: ', action.payload);
+//     console.log('currentState: ', store.getState());
+
+//     next(action);
+//     console.log('next state: ',store.getState());
+// }
