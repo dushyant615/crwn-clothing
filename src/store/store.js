@@ -5,17 +5,18 @@ import storage from 'redux-persist/lib/storage'; //saves store state into local 
 // import storageSession from 'redux-persist/lib/storage/session'; //save store state into session storage
 import logger from 'redux-logger';
 import { rootReducer } from './root-reducer';
+import thunk from 'redux-thunk';
 
 const persistConfig = {
     key: 'root',
     storage: storage,
-    blacklist: ['user']
+    whitelist: ['cart']
 }
 
 const persistedReducer = persistReducer(persistConfig,rootReducer);
 
 // middlewares catches actions before the reducers are hit.
-const middleWares = [process.env.NODE_ENV === 'development' && logger].filter(Boolean); //we can add multiple middlewares here
+const middleWares = [process.env.NODE_ENV === 'development' && logger, thunk].filter(Boolean); //we can add multiple middlewares here
 const composedEnhancer =
     (process.env.NODE_ENV !== 'production' && 
         window &&
