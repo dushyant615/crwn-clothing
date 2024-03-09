@@ -66,7 +66,7 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInformation
       console.log('error creating the user', error.message);
     }
   }
-  return userDocRef;
+  return userSnapshot;
   // console.log(userSnapshot.exists()); this method tell if the document exist or not.
   // if user data exists
   // return user data
@@ -109,3 +109,16 @@ export const getCategoriesAndDocuments = async () => {
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(docSnapshot => docSnapshot.data());
 }
+
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth, 
+      (userAuth)=>{
+        unsubscribe();
+        resolve(userAuth);
+      },
+      reject
+    );
+  });
+};
