@@ -5,25 +5,41 @@ import storage from 'redux-persist/lib/storage'; //saves store state into local 
 // import storageSession from 'redux-persist/lib/storage/session'; //save store state into session storage
 import logger from 'redux-logger';
 import { rootReducer } from './root-reducer';
-import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
+import { rootSaga } from './root-saga';
+// import thunk from 'redux-thunk';  
+//sagas replaces thunk, we mainly want one async sideeffect library either saga or thunk
 
-const persistConfig = {
+/*Redux persist */
+const persistConfig = { 
     key: 'root',
     storage: storage,
     whitelist: ['cart']
 }
-
 const persistedReducer = persistReducer(persistConfig,rootReducer);
 
+const sagaMiddleware = createSagaMiddleware();
+
 // middlewares catches actions before the reducers are hit.
-const middleWares = [process.env.NODE_ENV === 'development' && logger, thunk].filter(Boolean); //we can add multiple middlewares here
+const middleWares = [
+    process.env.NODE_ENV === 'development' && logger, 
+    sagaMiddleware
+].filter(Boolean); //we can add multiple middlewares here
+
 const composedEnhancer =
     (process.env.NODE_ENV !== 'production' && 
         window &&
         window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
     compose;
+
 const composedEnhancers = composedEnhancer(applyMiddleware(...middleWares));
 
 // we need root reducer in order to generate the store.
-export const store = createStore(persistedReducer, undefined, composedEnhancers);
+export const store = createStore(
+    persistedReducer, 
+    undefined, 
+    composedEnhancers
+);
+
+sagaMiddleware.run(rootSaga);
 export const persistor = persistStore(store);
